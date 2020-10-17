@@ -44,7 +44,56 @@ describe MoviesController, type: 'controller' do
             end
         end
     end
+    context '#create' do
+        describe 'movie is created' do
+           it 'executes the creation query against the database' do
+               movie = double('movie', :title => "fake movie")
+               expect(Movie).to receive(:create!).with({title: "fake movie"}).and_return movie
+               post :create, {movie: {title: "fake movie"}}
+           end
+            
+           it 'assign the movie to the template' do
+               movie = double('movie', :title => "fake movie")
+               expect(Movie).to receive(:create!).with({title: "fake movie"}).and_return movie
+               post :create, {movie: {title: "fake movie"}}
+               expect(assigns(:movie)).to eq movie
+           end
+           
+           it 'redirects to the homepage' do
+               post :create, {movie: {title: "fake movie"}}
+               expect(response).to redirect_to movies_path
+           end           
+        end
+    end
+    context '#destroy' do
+        describe 'movie is destroyed' do
+                       
+           it 'executes the deletion query against the database' do
+               movie = double('movie', :title => "fake movie")
+               allow(Movie).to receive(:find).and_return movie
+               expect(movie).to receive(:destroy)
+               delete :destroy, { id: 1 }
+           end
+            
+           it 'assign the movie to the template' do
+               movie = double('movie', :title => "fake movie")
+               allow(Movie).to receive(:find).and_return movie
+               expect(movie).to receive(:destroy)
+               delete :destroy, { id: 1 }
+               expect(assigns(:movie)).to eq movie
+           end
+            
+           it 'redirects to the homepage' do
+               movie = double('movie', :title => "fake movie")
+               allow(Movie).to receive(:find).and_return movie
+               expect(movie).to receive(:destroy)
+               delete :destroy, { id: 1 }
+               expect(response).to redirect_to movies_path
+           end                 
+        end
+    end   
 end
+    
 
 
             
